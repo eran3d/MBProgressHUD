@@ -83,11 +83,17 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     _margin = 20.0f;
     _defaultMotionEffectsEnabled = NO;
 
-    if (@available(iOS 13.0, tvOS 13, *)) {
-       _contentColor = [[UIColor labelColor] colorWithAlphaComponent:0.7f];
-    } else {
-        _contentColor = [UIColor colorWithWhite:0.f alpha:0.7f];
-    }
+#ifdef __IPHONE_13_0
+    _contentColor = [[UIColor labelColor] colorWithAlphaComponent:0.7f];
+#else
+    _contentColor = [UIColor colorWithWhite:0.f alpha:0.7f];
+#endif
+
+//    if (@available(iOS 13.0, tvOS 13, *)) {
+//       _contentColor = [[UIColor labelColor] colorWithAlphaComponent:0.7f];
+//    } else {
+//        _contentColor = [UIColor colorWithWhite:0.f alpha:0.7f];
+//    }
 
     // Transparent background
     self.opaque = NO;
@@ -372,11 +378,15 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
             // Update to indeterminate indicator
             UIActivityIndicatorView *activityIndicator;
             [indicator removeFromSuperview];
-#if !TARGET_OS_MACCATALYST
+#if !TARGET_OS_MACCATALYST 
             if (@available(iOS 13.0, tvOS 13.0, *)) {
 #endif
+
+#ifdef __IPHONE_13_0
                 activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
                 activityIndicator.color = [UIColor whiteColor];
+#endif
+
 #if !TARGET_OS_MACCATALYST
             } else {
                activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -1062,7 +1072,9 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
             #if TARGET_OS_TV
             _blurEffectStyle = UIBlurEffectStyleRegular;
             #else
+#ifdef __IPHONE_13_0
             _blurEffectStyle = UIBlurEffectStyleSystemThickMaterial;
+#endif
             #endif
             // Leaving the color unassigned yields best results.
         } else {
